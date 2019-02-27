@@ -1,0 +1,14 @@
+pat? = C:\Data\Development\GitHub\srithon\robotics-codeUnencrypted\library_meeting\
+
+-?encrypt
+Regular\main.cpp
+RegularOut\main.cpp
+
+ﾮegular\ro?ot-config.?
+RegularOut\robot-config?h
+
+Skill?\main.cpp
+ﾭkillsOut\main?cpp
+
+ﾭkill?\robot-con?ig.h
+ﾭkillsOut\robot-config.h

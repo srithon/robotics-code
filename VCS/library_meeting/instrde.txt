@@ -1,0 +1,14 @@
+path = C:\Data\Development\GitHub\srithon\robotics-codeUnencrypted\library_meeting\
+
+--encrypt
+Regular\main.cpp
+RegularOut\main.cpp
+
+Regular\robot-config.h
+RegularOut\robot-config.h
+
+Skills\main.cpp
+SkillsOut\main.cpp
+
+Skills\robot-config.h
+SkillsOut\robot-config.h
