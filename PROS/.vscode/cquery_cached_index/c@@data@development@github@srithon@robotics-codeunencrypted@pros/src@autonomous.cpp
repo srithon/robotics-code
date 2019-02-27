@@ -81,11 +81,11 @@ void moveBot(const int inches, const double velocity, const bool direction)
     deg = -deg;
 
   //double averagePosition = getAveragePosition();
-  double lMBaveragePosition = lMB.get_position();
+  double lMBEndingPosition = lMB.get_position() + deg;
   rotateDriveMotors(deg, velocity, true, true, true, true);
 
   //while (getAveragePosition() < averagePosition + encoderTicks)
-  while (lMB.get_position() < lMBaveragePosition)
+  while (lMB.get_position() < lMBEndingPosition)
   {
     pros::delay(20);
   }
