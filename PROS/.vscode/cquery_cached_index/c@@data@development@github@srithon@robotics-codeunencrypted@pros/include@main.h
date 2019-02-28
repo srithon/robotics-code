@@ -78,7 +78,7 @@ void opcontrol(void);
 //#include <iostream>
 #endif
 
-static const double PI = 3.1415926535897;
+/*static const double PI = 3.1415926535897;
 static const double WHEEL_RADIUS = 2.0; //inches
 static const double WHEEL_CIRCUMFERENCE = (2 * PI) * WHEEL_RADIUS;
 
@@ -104,6 +104,6 @@ static pros::Motor roller(ROLLER_MOTOR_PORT, pros::E_MOTOR_GEARSET_18, false, pr
 static pros::Controller controller(pros::E_CONTROLLER_MASTER);
 //pros::Competition competition;
 
-static pros::Motor *driveMotors[4] = {&leftMF, &rightMF, &leftMB, &rightMB};
+static pros::Motor *driveMotors[4] = {&leftMF, &rightMF, &leftMB, &rightMB};*/
 
 #endif  // _PROS_MAIN_H_
