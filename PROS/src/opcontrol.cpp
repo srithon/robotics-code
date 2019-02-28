@@ -17,11 +17,20 @@
 
 void checkButtons(void* params)
 {
+	bool j = false;
+
   while (true)
   {
     if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A))
     {
+			pros::lcd::clear();
 
+			if (j)
+				pros::lcd::set_text(1, "ONE!");
+			else
+				pros::lcd::set_text(1, "TWO!");
+
+			j = !j;
     }
 
 		pros::delay(2);
