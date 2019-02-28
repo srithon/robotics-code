@@ -15,6 +15,8 @@
  * task, not resume it from where it left off.
  */
 
+pros::Controller* controller = new pros::Controller(pros::E_CONTROLLER_MASTER);
+
 void checkButtons(void* params)
 {
 	bool j = false;

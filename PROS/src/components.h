@@ -24,6 +24,7 @@ static const pros::Motor* shooter = new pros::Motor(SHOOTER_MOTOR_PORT, pros::E_
 static const pros::Motor* roller = new pros::Motor(ROLLER_MOTOR_PORT, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
 
 extern pros::Controller* controller;// = new pros::Controller(pros::E_CONTROLLER_MASTER);
+
 //pros::Competition competition;
 
 static const pros::Motor* driveMotors[4] = {leftMF, rightMF, leftMB, rightMB};

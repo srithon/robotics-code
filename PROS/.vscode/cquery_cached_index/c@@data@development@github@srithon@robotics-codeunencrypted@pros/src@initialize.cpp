@@ -1,8 +1,6 @@
 #include "main.h"
 #include "components.h"
 
-pros::Controller* controller = new pros::Controller(pros::E_CONTROLLER_MASTER);
-
 void on_center_button() {
 	static bool pressed = false;
 	pressed = !pressed;
