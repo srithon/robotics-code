@@ -62,10 +62,10 @@ void pidTurn(const float deg)
 
 		motorSpinVelocity = (error * kP) + (errorSum * kI) + (rateErrorChange * kD);
 
-    rMF.move_velocity(motorSpinVelocity);
-    rMB.move_velocity(motorSpinVelocity);
-    lMF.move_velocity(-motorSpinVelocity);
-    lMB.move_velocity(-motorSpinVelocity);
+    rightMF.move_velocity(motorSpinVelocity);
+    rightMB.move_velocity(motorSpinVelocity);
+    leftMF.move_velocity(-motorSpinVelocity);
+    leftMB.move_velocity(-motorSpinVelocity);
 
 		lastError = error;
 
@@ -81,11 +81,11 @@ void moveBot(const int inches, const double velocity, const bool direction)
     deg = -deg;
 
   //double averagePosition = getAveragePosition();
-  double lMBEndingPosition = lMB.get_position() + deg;
+  double lMBEndingPosition = leftMB.get_position() + deg;
   rotateDriveMotors(deg, velocity, true, true, true, true);
 
   //while (getAveragePosition() < averagePosition + encoderTicks)
-  while (lMB.get_position() < lMBEndingPosition)
+  while (leftMB.get_position() < lMBEndingPosition)
   {
     pros::delay(20);
   }
@@ -95,19 +95,19 @@ void rotateDriveMotors(const double deg, const std::int32_t velocity, const bool
 {
   if (rfm)
   {
-    rMF.move_relative(deg, velocity);
+    rightMF.move_relative(deg, velocity);
   }
   if (lfm)
   {
-    lMF.move_relative(deg, velocity);
+    leftMF.move_relative(deg, velocity);
   }
   if (rbm)
   {
-    rMB.move_relative(deg, velocity);
+    rightMB.move_relative(deg, velocity);
   }
   if (lbm)
   {
-    lMB.move_relative(deg, velocity);
+    leftMB.move_relative(deg, velocity);
   }
 }
 

@@ -3,32 +3,32 @@
 #ifndef COMPONENTS_H
 #define COMPONENTS_H
 
-const double PI = 3.1415926535897;
-const double WHEEL_RADIUS = 2.0; //inches
-const double WHEEL_CIRCUMFERENCE = (2 * PI) * WHEEL_RADIUS;
+static const double PI = 3.1415926535897;
+static const double WHEEL_RADIUS = 2.0; //inches
+static const double WHEEL_CIRCUMFERENCE = (2 * PI) * WHEEL_RADIUS;
 
-const float integralMax = 38586.4; //experimental value (OPTIONAL)
-const float kP = 0;
-const float kI = 0;
-const float kD = 0;
+static const float integralMax = 38586.4; //experimental value (OPTIONAL)
+static const float kP = 0;
+static const float kI = 0;
+static const float kD = 0;
 
-const int LEFT_MOTOR_FRONT_PORT = 1;
-const int RIGHT_MOTOR_FRONT_PORT = 2;
-const int LEFT_MOTOR_BACK_PORT = 3;
-const int RIGHT_MOTOR_BACK_PORT = 4;
-const int SHOOTER_MOTOR_PORT = 5;
-const int ROLLER_MOTOR_PORT = 6;
+static const int LEFT_MOTOR_FRONT_PORT = 1;
+static const int RIGHT_MOTOR_FRONT_PORT = 2;
+static const int LEFT_MOTOR_BACK_PORT = 3;
+static const int RIGHT_MOTOR_BACK_PORT = 4;
+static const int SHOOTER_MOTOR_PORT = 5;
+static const int ROLLER_MOTOR_PORT = 6;
 
-pros::Motor lMF(LEFT_MOTOR_FRONT_PORT, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor rMF(RIGHT_MOTOR_FRONT_PORT, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor lMB(LEFT_MOTOR_BACK_PORT, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor rMB(RIGHT_MOTOR_BACK_PORT, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor shooter(SHOOTER_MOTOR_PORT, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor roller(ROLLER_MOTOR_PORT, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
+static pros::Motor leftMF(LEFT_MOTOR_FRONT_PORT, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
+static pros::Motor rightMF(RIGHT_MOTOR_FRONT_PORT, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
+static pros::Motor leftMB(LEFT_MOTOR_BACK_PORT, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
+static pros::Motor rightMB(RIGHT_MOTOR_BACK_PORT, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
+static pros::Motor shooter(SHOOTER_MOTOR_PORT, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
+static pros::Motor roller(ROLLER_MOTOR_PORT, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
 
-pros::Controller controller(pros::E_CONTROLLER_MASTER);
+static pros::Controller controller(pros::E_CONTROLLER_MASTER);
 //pros::Competition competition;
 
-pros::Motor *driveMotors[4] = {&lMF, &rMF, &lMB, &rMB};
+static pros::Motor *driveMotors[4] = {&leftMF, &rightMF, &leftMB, &rightMB};
 
 #endif

@@ -46,10 +46,10 @@ void opcontrol()
     float power = controller.get_analog(ANALOG_LEFT_Y);
     float turn = controller.get_analog(ANALOG_RIGHT_X);
 
-    lMF.move_velocity(power + turn);
-    lMB.move_velocity(power + turn);
-    rMF.move_velocity(power - turn);
-    rMB.move_velocity(power - turn);
+    leftMF.move_velocity(power + turn);
+    leftMB.move_velocity(power + turn);
+    rightMF.move_velocity(power - turn);
+    rightMB.move_velocity(power - turn);
   }
 }
 
