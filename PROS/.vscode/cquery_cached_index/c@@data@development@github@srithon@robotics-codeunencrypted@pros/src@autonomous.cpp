@@ -1,5 +1,5 @@
 #include "main.h"
-//#include "components.h"
+#include "components.h"
 
 /**
  * Runs the user autonomous code. This function will be started in its own task
