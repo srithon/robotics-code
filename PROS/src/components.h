@@ -16,14 +16,14 @@ static const int RIGHT_MOTOR_BACK_PORT = 4;
 static const int SHOOTER_MOTOR_PORT = 5;
 static const int ROLLER_MOTOR_PORT = 6;
 
-extern pros::Motor leftMF;//(LEFT_MOTOR_FRONT_PORT, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
-extern pros::Motor rightMF;//(RIGHT_MOTOR_FRONT_PORT, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
-extern pros::Motor leftMB;//(LEFT_MOTOR_BACK_PORT, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
-extern pros::Motor rightMB;//(RIGHT_MOTOR_BACK_PORT, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
-extern pros::Motor shooter;//(SHOOTER_MOTOR_PORT, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
-extern pros::Motor roller;//(ROLLER_MOTOR_PORT, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
+static const pros::Motor* leftMF = new pros::Motor(LEFT_MOTOR_FRONT_PORT, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
+static const pros::Motor* rightMF = new pros::Motor(RIGHT_MOTOR_FRONT_PORT, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
+static const pros::Motor* leftMB = new pros::Motor(LEFT_MOTOR_BACK_PORT, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
+static const pros::Motor* rightMB = new pros::Motor(RIGHT_MOTOR_BACK_PORT, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
+static const pros::Motor* shooter = new pros::Motor(SHOOTER_MOTOR_PORT, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
+static const pros::Motor* roller = new pros::Motor(ROLLER_MOTOR_PORT, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
 
-extern pros::Controller controller;//(pros::E_CONTROLLER_MASTER);
+extern pros::Controller* controller;// = new pros::Controller(pros::E_CONTROLLER_MASTER);
 //pros::Competition competition;
 
-extern pros::Motor *driveMotors[4];// = {&leftMF, &rightMF, &leftMB, &rightMB};
+static const pros::Motor* driveMotors[4] = {leftMF, rightMF, leftMB, rightMB};

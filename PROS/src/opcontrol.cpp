@@ -21,7 +21,7 @@ void checkButtons(void* params)
 
   while (true)
   {
-    if (controller.get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A))
+    if (controller->get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A))
     {
 			pros::lcd::clear();
 
@@ -43,13 +43,13 @@ void opcontrol()
 
 	while (true)
   {
-    float power = controller.get_analog(ANALOG_LEFT_Y);
-    float turn = controller.get_analog(ANALOG_RIGHT_X);
+    float power = controller->get_analog(ANALOG_LEFT_Y);
+    float turn = controller->get_analog(ANALOG_RIGHT_X);
 
-    leftMF.move_velocity(power + turn);
-    leftMB.move_velocity(power + turn);
-    rightMF.move_velocity(power - turn);
-    rightMB.move_velocity(power - turn);
+    leftMF->move_velocity(power + turn);
+    leftMB->move_velocity(power + turn);
+    rightMF->move_velocity(power - turn);
+    rightMB->move_velocity(power - turn);
   }
 }
 

@@ -1,16 +1,7 @@
 #include "main.h"
 #include "components.h"
 
-pros::Motor leftMF(LEFT_MOTOR_FRONT_PORT, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor rightMF(RIGHT_MOTOR_FRONT_PORT, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor leftMB(LEFT_MOTOR_BACK_PORT, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor rightMB(RIGHT_MOTOR_BACK_PORT, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor shooter(SHOOTER_MOTOR_PORT, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
-pros::Motor roller(ROLLER_MOTOR_PORT, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
-
-pros::Controller controller(pros::E_CONTROLLER_MASTER);
-
-pros::Motor *driveMotors[4] = {&leftMF, &rightMF, &leftMB, &rightMB};
+pros::Controller* controller = new pros::Controller(pros::E_CONTROLLER_MASTER);
 
 void on_center_button() {
 	static bool pressed = false;
