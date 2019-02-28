@@ -26,6 +26,9 @@ pros::Motor rMB(RIGHT_MOTOR_BACK_PORT, pros::E_MOTOR_GEARSET_18, false, pros::E_
 pros::Motor shooter(SHOOTER_MOTOR_PORT, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
 pros::Motor roller(ROLLER_MOTOR_PORT, pros::E_MOTOR_GEARSET_18, false, pros::E_MOTOR_ENCODER_DEGREES);
 
+pros::Controller controller(pros::E_CONTROLLER_MASTER);
+//pros::Competition competition;
+
 pros::Motor *driveMotors[4] = {&lMF, &rMF, &lMB, &rMB};
 
 #endif
