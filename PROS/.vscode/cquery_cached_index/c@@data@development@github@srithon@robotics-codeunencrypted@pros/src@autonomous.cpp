@@ -14,11 +14,12 @@
  */
 
 void autonomous(void);
-void moveBot(const int, const double, const bool);
+void moveBot(const int, const float, const bool);
 void pidTurn(const float);
-void rotateDriveMotors(const double, const std::int32_t, const bool, const bool, const bool, const bool);
-double getPosition(const bool);
+void rotateDriveMotors(const float, const std::int32_t, const bool, const bool, const bool, const bool);
+float getPosition(const bool);
 void resetMotorRotations(void);
+//use the explicit keyword to prevent conversions of float types?
 
 void autonomous()
 {
@@ -29,8 +30,8 @@ void autonomous()
 
 void pidTurn(const float deg)
 {
-  double arcLength = WHEEL_CIRCUMFERENCE * (deg / 360.0);
-  double rot = 360.0*(arcLength/(4.0*PI));
+  float arcLength = WHEEL_CIRCUMFERENCE * (deg / 360.0);
+  float rot = 360.0*(arcLength/(4.0*PI));
 
 	float desiredDegs = rot;
 	float currentDegs = 0;
@@ -73,15 +74,15 @@ void pidTurn(const float deg)
 	}
 }
 
-void moveBot(const int inches, const double velocity, const bool direction)
+void moveBot(const float inches, const double velocity, const bool direction)
 {
-  double deg = inches / (360 * WHEEL_CIRCUMFERENCE);
+  float deg = inches / (360.0f * WHEEL_CIRCUMFERENCE);
 
   if (!direction)
     deg = -deg;
 
   //double averagePosition = getAveragePosition();
-  double lMBEndingPosition = leftMB->get_position() + deg;
+  float lMBEndingPosition = leftMB->get_position() + deg;
   rotateDriveMotors(deg, velocity, true, true, true, true);
 
   //while (getAveragePosition() < averagePosition + encoderTicks)
@@ -91,7 +92,7 @@ void moveBot(const int inches, const double velocity, const bool direction)
   }
 }
 
-void rotateDriveMotors(const double deg, const std::int32_t velocity, const bool rfm, const bool lfm, const bool rbm, const bool lbm)
+void rotateDriveMotors(const float deg, const std::int32_t velocity, const bool rfm, const bool lfm, const bool rbm, const bool lbm)
 {
   if (rfm)
   {
@@ -111,9 +112,9 @@ void rotateDriveMotors(const double deg, const std::int32_t velocity, const bool
   }
 }
 
-double getPosition(bool average)
+float getPosition(bool average)
 {
-  double t = 0;
+  float t = 0;
 
   for (int i = 0; i < 4; i++)
   {
@@ -121,7 +122,7 @@ double getPosition(bool average)
   }
 
   if (average)
-    return t / 4.0;
+    return t / 4.0f;
   else
     return t;
 }
