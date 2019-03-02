@@ -1,4 +1,3 @@
-#include "main.h"
 #include "components.h"
 
 const pros::Motor* leftMF = new pros::Motor(LEFT_MOTOR_FRONT_PORT, pros::E_MOTOR_GEARSET_18, true, pros::E_MOTOR_ENCODER_DEGREES);
