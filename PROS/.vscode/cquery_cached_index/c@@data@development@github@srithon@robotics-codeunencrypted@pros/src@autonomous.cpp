@@ -14,24 +14,25 @@
  */
 
 void autonomous(void);
-void moveBot(const int, const float, const bool);
-void pidTurn(const float);
-void rotateDriveMotors(const float, const std::int32_t, const bool, const bool, const bool, const bool);
-float getPosition(const bool);
+void moveBot(double, int32_t, bool);
+void pidTurn(float);
+void rotateDriveMotors(double, std::int32_t, bool = 1, bool = 1, bool = 1, bool = 1);
+float getPosition(bool);
 void resetMotorRotations(void);
+void stopMotors(bool = 1, bool = 1, bool = 1, bool = 1);
 //use the explicit keyword to prevent conversions of float types?
 
 void autonomous()
 {
-  moveBot(12, 50, true);
+  moveBot(12.0, static_cast<int32_t>(50), true);
   pros::delay(1000);
-  pidTurn(90);
+  pidTurn(90.0f);
 }
 
-void pidTurn(const float deg)
+void pidTurn(float deg)
 {
-  float arcLength = WHEEL_CIRCUMFERENCE * (deg / 360.0);
-  float rot = 360.0*(arcLength/(4.0*PI));
+  float arcLength = WHEEL_CIRCUMFERENCE * (deg / 360.0f);
+  float rot = 360.0f*(arcLength/(4.0f*PI));
 
 	float desiredDegs = rot;
 	float currentDegs = 0;
@@ -41,7 +42,8 @@ void pidTurn(const float deg)
 	float errorSum = 0;
 
 	float rateErrorChange;
-	float motorSpinVelocity;
+
+	std::int32_t motorSpinVelocity;
 
   resetMotorRotations();
 
@@ -61,12 +63,12 @@ void pidTurn(const float deg)
 		//derivative
 		rateErrorChange = (error - lastError);// / 16;//(getChangeInTime());
 
-		motorSpinVelocity = (error * kP) + (errorSum * kI) + (rateErrorChange * kD);
+		motorSpinVelocity = static_cast<std::int32_t>((error * kP) + (errorSum * kI) + (rateErrorChange * kD));
 
     rightMF->move_velocity(motorSpinVelocity);
     rightMB->move_velocity(motorSpinVelocity);
-    leftMF->move_velocity(-motorSpinVelocity);
-    leftMB->move_velocity(-motorSpinVelocity);
+    leftMF->move_velocity(motorSpinVelocity); //check sign
+    leftMB->move_velocity(motorSpinVelocity); //check sign
 
 		lastError = error;
 
@@ -74,25 +76,27 @@ void pidTurn(const float deg)
 	}
 }
 
-void moveBot(const float inches, const double velocity, const bool direction)
+void moveBot(double inches, int32_t velocity, bool direction)
 {
-  float deg = inches / (360.0f * WHEEL_CIRCUMFERENCE);
+  double deg = inches / (360.0 * static_cast<double>(WHEEL_CIRCUMFERENCE));
 
   if (!direction)
     deg = -deg;
 
   //double averagePosition = getAveragePosition();
-  float lMBEndingPosition = leftMB->get_position() + deg;
-  rotateDriveMotors(deg, velocity, true, true, true, true);
+  double lMBEndingPosition = leftMB->get_position() + deg;
+  rotateDriveMotors(deg, velocity);
 
   //while (getAveragePosition() < averagePosition + encoderTicks)
   while (leftMB->get_position() < lMBEndingPosition)
   {
     pros::delay(20);
   }
+
+  stopMotors();
 }
 
-void rotateDriveMotors(const float deg, const std::int32_t velocity, const bool rfm, const bool lfm, const bool rbm, const bool lbm)
+void rotateDriveMotors(double deg, std::int32_t velocity, bool rfm, bool lfm, bool rbm, bool lbm)
 {
   if (rfm)
   {
@@ -114,7 +118,7 @@ void rotateDriveMotors(const float deg, const std::int32_t velocity, const bool 
 
 float getPosition(bool average)
 {
-  float t = 0;
+  double t = 0;
 
   for (int i = 0; i < 4; i++)
   {
@@ -122,9 +126,9 @@ float getPosition(bool average)
   }
 
   if (average)
-    return t / 4.0f;
+    return static_cast<float>(t) / 4.0f;
   else
-    return t;
+    return static_cast<float>(t);
 }
 
 void resetMotorRotations(void)
@@ -133,4 +137,18 @@ void resetMotorRotations(void)
   {
     motor->set_zero_position(motor->get_position());
   }
+}
+
+void stopMotors(bool rfm, bool lfm, bool rbm, bool lbm) //does this work?
+{
+  const int32_t zero = static_cast<int32_t>(0);
+
+  if (rfm)
+    rightMF->move_voltage(zero);
+  if (lfm)
+    leftMF->move_voltage(zero);
+  if (rbm)
+    rightMB->move_voltage(zero);
+  if (lbm)
+    leftMB->move_voltage(zero);
 }
