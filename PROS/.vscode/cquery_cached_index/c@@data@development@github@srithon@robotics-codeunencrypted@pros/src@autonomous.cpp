@@ -15,12 +15,13 @@
 void autonomous(void);
 void rotateDriveMotors(double, std::int32_t, bool = 1, bool = 1, bool = 1, bool = 1);
 void resetMotorRotations(void);
+inline float getEncoderEq(float);
 
-const auto chassis = okapi::ChassisControllerFactory::create(LEFT_MOTOR_FRONT_PORT, RIGHT_MOTOR_FRONT_PORT);
+auto chassis = okapi::ChassisControllerFactory::create(LEFT_MOTOR_FRONT_PORT, RIGHT_MOTOR_FRONT_PORT);
 
 void autonomous()
 {
-
+  chassis.moveDistance(getEncoderEq(12.0f));
 }
 
 void resetMotorRotations(void)
@@ -47,5 +48,5 @@ void stopMotors(bool rfm, bool lfm, bool rbm, bool lbm) //does this work?
 
 inline float getEncoderEq(float inches)
 {
-  return inches * ENCODER_TICKS_PER_WHEEL_ROTATION;
+  return inches / WHEEL_CIRCUMFERENCE * ENCODER_TICKS_PER_WHEEL_ROTATION;
 }

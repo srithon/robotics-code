@@ -7,7 +7,7 @@ const float mPI = 3.1415926;
 const float WHEEL_RADIUS = 2.0f; //inches
 const float WHEEL_CIRCUMFERENCE = (2.0f * mPI) * WHEEL_RADIUS;
 
-const float ENCODER_TICKS_PER_WHEEL_ROTATION = 0.0f; //find value or google
+const float ENCODER_TICKS_PER_WHEEL_ROTATION = 900.0f; //find value or google
 
 const float integralMax = 38586.4; //experimental value (OPTIONAL)
 const float kP = 0;
