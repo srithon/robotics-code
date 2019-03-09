@@ -11,7 +11,7 @@ const double ENCODER_TICKS_PER_ROTATION = 347.991801;
 const float BOT_RADIUS = 7.63f;
 
 const float integralMax = 38586.4; //experimental value (OPTIONAL)
-const float kP = 0.5f;
+const float kP = 0.210913f;
 const float kI = 0;
 const float kD = 0;
 

@@ -86,11 +86,11 @@ void block(const pros::Motor* motorToBlock, float desiredPosition) //desiredPosi
 void pidTurn(float deg)
 {
   float arcLength = 2.0 * BOT_RADIUS * PI * (deg / 360.0f);
-  float rot = (arcLength/(4.0f*PI)) * (ENCODER_TICKS_PER_ROTATION); //ticks
+  float desiredTicks = (arcLength/(4.0f*PI)) * (ENCODER_TICKS_PER_ROTATION); //ticks WAS NEGATIVE
 
-  pros::lcd::set_text(3, "Rotation In Encoder Ticks - " + std::to_string(rot));
+  pros::lcd::set_text(3, "Rotation In Encoder Ticks - " + std::to_string(desiredTicks));
 
-	float desiredTicks = rot; //ticks - WAS NEGATIVE
+	//float desiredTicks = rot; //ticks - WAS NEGATIVE
 	float currentTicks = 0; //ticks
 
 	float lastError = 0;
@@ -122,12 +122,12 @@ void pidTurn(float deg)
 		//derivative
 		rateErrorChange = (error - lastError);// / 16;//(getChangeInTime());
 
-		motorSpinVelocity = static_cast<std::int16_t>((error * kP));// + (errorSum * kI) + (rateErrorChange * kD));
+		motorSpinVelocity = static_cast<std::int16_t>((error * (kP + 0.5 * (1 - (180 / std::abs(deg))))));// + (errorSum * kI) + (rateErrorChange * kD));
 
-    rightMF->move_velocity(motorSpinVelocity);
-    rightMB->move_velocity(motorSpinVelocity);
-    leftMF->move_velocity(-motorSpinVelocity); //check sign
-    leftMB->move_velocity(-motorSpinVelocity); //check sign
+    leftMF->move_velocity(motorSpinVelocity); //check sign
+    leftMB->move_velocity(motorSpinVelocity); //check sign
+    rightMF->move_velocity(-motorSpinVelocity);
+    rightMB->move_velocity(-motorSpinVelocity);
 
 		lastError = error;
 
