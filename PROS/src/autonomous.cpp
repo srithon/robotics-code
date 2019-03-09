@@ -13,9 +13,9 @@
  */
 
 void autonomous(void);
-void moveBot(double, int32_t, bool);
+void moveBot(double, int16_t, bool);
 void pidTurn(float);
-void rotateDriveMotors(double, std::int32_t, bool = 1, bool = 1, bool = 1, bool = 1);
+void rotateDriveMotors(double, std::int16_t, bool = 1, bool = 1, bool = 1, bool = 1);
 float getPosition(bool);
 void resetMotorRotations(void);
 void turn(float);
@@ -26,10 +26,8 @@ void move(double ticks);
 
 void autonomous()
 {
-  pros::lcd::set_text(1, "Ran autonomous!");
-  //moveBot(12.0, static_cast<int32_t>(50), true);
-  //move(ENCODER_TICKS_PER_ROTATION);
-  //pros::delay(1000);
+  moveBot(12.0, static_cast<int16_t>(50), true);
+  pros::delay(1000);
   pidTurn(90.0f);
 
 //  turn(90.0f);
@@ -122,7 +120,7 @@ void pidTurn(float deg)
 		//derivative
 		rateErrorChange = (error - lastError);// / 16;//(getChangeInTime());
 
-		motorSpinVelocity = static_cast<std::int16_t>((error * kP));// + (errorSum * kI) + (rateErrorChange * kD));
+		motorSpinVelocity = static_cast<std::int16_t>((error * kP) + (errorSum * kI) + (rateErrorChange * kD));
 
     rightMF->move_velocity(motorSpinVelocity);
     rightMB->move_velocity(motorSpinVelocity);
@@ -137,7 +135,7 @@ void pidTurn(float deg)
   pros::lcd::set_text(line++, "Current Position - " + std::to_string(currentTicks));
 }
 
-void moveBot(double inches, int32_t velocity, bool direction)
+void moveBot(double inches, int16_t velocity, bool direction)
 {
   //double desiredTicks = inches / (360.0 * static_cast<double>(WHEEL_CIRCUMFERENCE));
   double desiredTicks = (ENCODER_TICKS_PER_ROTATION * (inches / WHEEL_CIRCUMFERENCE));
