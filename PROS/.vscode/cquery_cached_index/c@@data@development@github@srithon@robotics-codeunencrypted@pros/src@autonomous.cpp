@@ -103,10 +103,10 @@ void pidTurn(float deg)
 
   resetMotorRotations();
 
-  short iter = 0;
+  //short iter = 0;
   int line = 4;
 
-	while (std::abs(currentTicks - desiredTicks) > 0.01)
+	while (std::abs(error) > 0.01)
 	{
 		currentTicks = std::abs(rightMF->get_position());//getPosition(true);
 
