@@ -28,11 +28,11 @@
             "-fdiagnostics-color",
             "--std=gnu++17",
             "-o",
-            "C:/Users/Sridaran/AppData/Local/Temp/tmp96aj8sc4/opcontrol.cpp.o",
-            "src\\opcontrol.cpp"
+            "C:/Users/Sridaran/AppData/Local/Temp/tmpucc5rc11/autonomous.cpp.o",
+            "src\\autonomous.cpp"
         ],
         "directory": "C:\\Data\\Development\\GitHub\\srithon\\robotics-codeUnencrypted\\PROS",
-        "file": "src\\opcontrol.cpp"
+        "file": "src\\autonomous.cpp"
     },
     {
         "arguments": [
@@ -63,7 +63,7 @@
             "-fdiagnostics-color",
             "--std=gnu++17",
             "-o",
-            "C:/Users/Sridaran/AppData/Local/Temp/tmp96aj8sc4/initialize.cpp.o",
+            "C:/Users/Sridaran/AppData/Local/Temp/tmpucc5rc11/initialize.cpp.o",
             "src\\initialize.cpp"
         ],
         "directory": "C:\\Data\\Development\\GitHub\\srithon\\robotics-codeUnencrypted\\PROS",
@@ -98,10 +98,10 @@
             "-fdiagnostics-color",
             "--std=gnu++17",
             "-o",
-            "C:/Users/Sridaran/AppData/Local/Temp/tmp96aj8sc4/autonomous.cpp.o",
-            "src\\autonomous.cpp"
+            "C:/Users/Sridaran/AppData/Local/Temp/tmpucc5rc11/opcontrol.cpp.o",
+            "src\\opcontrol.cpp"
         ],
         "directory": "C:\\Data\\Development\\GitHub\\srithon\\robotics-codeUnencrypted\\PROS",
-        "file": "src\\autonomous.cpp"
+        "file": "src\\opcontrol.cpp"
     }
 ]
