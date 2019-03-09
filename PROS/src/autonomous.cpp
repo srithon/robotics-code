@@ -90,7 +90,7 @@ void pidTurn(float deg)
 
   pros::lcd::set_text(3, "Rotation In Encoder Ticks - " + std::to_string(rot));
 
-	float desiredTicks = -rot; //ticks
+	float desiredTicks = rot; //ticks - WAS NEGATIVE
 	float currentTicks = 0; //ticks
 
 	float lastError = 0;
