@@ -18,23 +18,80 @@ void pidTurn(float);
 void rotateDriveMotors(double, std::int32_t, bool = 1, bool = 1, bool = 1, bool = 1);
 float getPosition(bool);
 void resetMotorRotations(void);
+void turn(float);
 void stopMotors(bool = 1, bool = 1, bool = 1, bool = 1);
+void block(const pros::Motor* motorToBlock, float relativePosition);
+void move(double ticks);
 //use the explicit keyword to prevent conversions of float types?
 
 void autonomous()
 {
-  moveBot(12.0, static_cast<int32_t>(50), true);
-  pros::delay(1000);
+  pros::lcd::set_text(1, "Ran autonomous!");
+  //moveBot(12.0, static_cast<int32_t>(50), true);
+  //move(ENCODER_TICKS_PER_ROTATION);
+  //pros::delay(1000);
   pidTurn(90.0f);
+
+//  turn(90.0f);
+
+  pros::lcd::set_text(2, "Finished Turn");
+
+//  while (true)
+//    pros::delay(5000);
+}
+
+void turn(float deg) //c
+{
+  float arcLength = 2.0 * BOT_RADIUS * PI * (deg / 360.0f);
+  //float rot = 360.0f*(arcLength/(4.0f*PI)); //degrees
+  float rot = (arcLength/(4.0f*PI)) * (ENCODER_TICKS_PER_ROTATION); //ticks
+
+  leftMB->move_relative(rot, 50);
+  leftMF->move_relative(rot, 50);
+  rightMB->move_relative(-1*rot, 50);
+  rightMF->move_relative(-1*rot, 50);
+
+  block(rightMF, rot);
+
+  pros::lcd::set_text(3, "Average Position - " + std::to_string(getPosition(true)));
+  double degreesTurned = getPosition(true) / (ENCODER_TICKS_PER_ROTATION * 2.0 * BOT_RADIUS * PI) * (4.0f * PI) * 360;
+  pros::lcd::set_text(4, "Degrees Turned - " + std::to_string(degreesTurned));
+}
+
+void move(double ticks)
+{
+  leftMB->move_relative(ticks, 200);
+  leftMF->move_relative(ticks, 200);
+  rightMB->move_relative(ticks, 200);
+  rightMF->move_relative(ticks, 200);
+}
+
+void block(const pros::Motor* motorToBlock, float desiredPosition) //desiredPosition has to be in ticks
+{
+  double finalPosition = std::abs(motorToBlock->get_position()) + std::abs(desiredPosition);
+
+//  pros::lcd::set_text(5, "Desired Position In Block - " + std::to_string(finalPosition));
+
+//  short iteration = 0;
+
+  while (std::abs(motorToBlock->get_position()) < finalPosition)
+  {
+    pros::delay(125);
+    //pros::lcd::set_text(7, std::to_string(iteration++) + " " + std::to_string(motorToBlock->get_position()));
+  }
+
+//  pros::lcd::set_text(7, "Done blocking");
 }
 
 void pidTurn(float deg)
 {
-  float arcLength = WHEEL_CIRCUMFERENCE * (deg / 360.0f);
-  float rot = 360.0f*(arcLength/(4.0f*PI));
+  float arcLength = 2.0 * BOT_RADIUS * PI * (deg / 360.0f);
+  float rot = (arcLength/(4.0f*PI)) * (ENCODER_TICKS_PER_ROTATION); //ticks
 
-	float desiredDegs = rot;
-	float currentDegs = 0;
+  pros::lcd::set_text(3, "Rotation In Encoder Ticks - " + std::to_string(rot));
+
+	float desiredTicks = -rot; //ticks
+	float currentTicks = 0; //ticks
 
 	float lastError = 0;
 	float error = 0;
@@ -42,16 +99,19 @@ void pidTurn(float deg)
 
 	float rateErrorChange;
 
-	std::int32_t motorSpinVelocity;
+	std::int16_t motorSpinVelocity;
 
   resetMotorRotations();
 
-	while (currentDegs < desiredDegs)
+  short iter = 0;
+  int line = 4;
+
+	while (std::abs(currentTicks - desiredTicks) > 0.01)
 	{
-		currentDegs = getPosition(true); // this or averageEncoderValue() - not sure
+		currentTicks = std::abs(rightMF->get_position());//getPosition(true);
 
 		//proportional
-		error = (desiredDegs - currentDegs);
+		error = (desiredTicks - currentTicks); //encoder ticks
 
 		//integral
 		if (errorSum < integralMax)
@@ -62,66 +122,86 @@ void pidTurn(float deg)
 		//derivative
 		rateErrorChange = (error - lastError);// / 16;//(getChangeInTime());
 
-		motorSpinVelocity = static_cast<std::int32_t>((error * kP) + (errorSum * kI) + (rateErrorChange * kD));
+		motorSpinVelocity = static_cast<std::int16_t>((error * kP));// + (errorSum * kI) + (rateErrorChange * kD));
 
     rightMF->move_velocity(motorSpinVelocity);
     rightMB->move_velocity(motorSpinVelocity);
-    leftMF->move_velocity(motorSpinVelocity); //check sign
-    leftMB->move_velocity(motorSpinVelocity); //check sign
+    leftMF->move_velocity(-motorSpinVelocity); //check sign
+    leftMB->move_velocity(-motorSpinVelocity); //check sign
 
 		lastError = error;
 
 		pros::delay(2);
 	}
+
+  pros::lcd::set_text(line++, "Current Position - " + std::to_string(currentTicks));
 }
 
 void moveBot(double inches, int32_t velocity, bool direction)
 {
-  double deg = inches / (360.0 * static_cast<double>(WHEEL_CIRCUMFERENCE));
+  //double desiredTicks = inches / (360.0 * static_cast<double>(WHEEL_CIRCUMFERENCE));
+  double desiredTicks = (ENCODER_TICKS_PER_ROTATION * (inches / WHEEL_CIRCUMFERENCE));
+
+  pros::lcd::set_text(1, ("Deg = " + std::to_string(desiredTicks)));
 
   if (!direction)
-    deg = -deg;
+    desiredTicks = -desiredTicks;
+
+  pros::delay(2000);
 
   //double averagePosition = getAveragePosition();
-  double lMBEndingPosition = leftMB->get_position() + deg;
-  rotateDriveMotors(deg, velocity);
+
+  //rotateDriveMotors(desiredTicks, velocity);
+
+  double lMBEndingPosition = leftMB->get_position() + desiredTicks;
+
+  rightMF->move_relative(desiredTicks, velocity);
+  leftMF->move_relative(desiredTicks, velocity);
+  rightMB->move_relative(desiredTicks, velocity);
+  leftMB->move_relative(desiredTicks, velocity);
 
   //while (getAveragePosition() < averagePosition + encoderTicks)
-  while (leftMB->get_position() < lMBEndingPosition)
+
+  int iter = 0;
+
+  while (leftMB->get_position() < lMBEndingPosition) //replace with BLOCK function
   {
-    pros::delay(20);
+    pros::lcd::set_text(3, ("Iteration - " + std::to_string(iter)));
+    pros::delay(100);
   }
+
+  pros::lcd::set_text(4, "Stopping Motors");
 
   stopMotors();
 }
 
-void rotateDriveMotors(double deg, std::int32_t velocity, bool rfm, bool lfm, bool rbm, bool lbm)
+void rotateDriveMotors(double desiredTicks, std::int32_t velocity, bool rfm, bool lfm, bool rbm, bool lbm)
 {
   if (rfm)
   {
-    rightMF->move_relative(deg, velocity);
+    rightMF->move_relative(desiredTicks, velocity);
   }
   if (lfm)
   {
-    leftMF->move_relative(deg, velocity);
+    leftMF->move_relative(desiredTicks, velocity);
   }
   if (rbm)
   {
-    rightMB->move_relative(deg, velocity);
+    rightMB->move_relative(desiredTicks, velocity);
   }
   if (lbm)
   {
-    leftMB->move_relative(deg, velocity);
+    leftMB->move_relative(desiredTicks, velocity);
   }
 }
 
-float getPosition(bool average)
+float getPosition(bool average) //returns encoder ticks
 {
   double t = 0;
 
   for (int i = 0; i < 4; i++)
   {
-    t += driveMotors[i]->get_position();
+    t += std::abs(driveMotors[i]->get_position());
   }
 
   if (average)
