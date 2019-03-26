@@ -43,7 +43,7 @@ void autonomous()
   pros::lcd::set_text(2, std::to_string(leftMF->get_position()));
   moveBot(12, 80, false);
   pros::lcd::set_text(3, std::to_string(leftMF->get_position()));
-
+//
   moveBot(4, 80, false);
   pros::lcd::set_text(4, std::to_string(leftMF->get_position()));
 }
