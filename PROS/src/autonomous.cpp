@@ -26,18 +26,26 @@ void move(double ticks);
 
 void autonomous()
 {
-  pros::lcd::set_text(1, "Ran autonomous!");
+  //pros::lcd::set_text(1, "Ran autonomous!");
   //moveBot(12.0, static_cast<int32_t>(50), true);
   //move(ENCODER_TICKS_PER_ROTATION);
   //pros::delay(1000);
-  pidTurn(90.0f);
+  //pidTurn(90.0f);
 
 //  turn(90.0f);
-
-  pros::lcd::set_text(2, "Finished Turn");
+  //pros::lcd::set_text(2, "Finished Turn");
 
 //  while (true)
 //    pros::delay(5000);
+
+  pros::lcd::set_text(1, std::to_string(leftMF->get_position()));
+  moveBot(12, 80, true);
+  pros::lcd::set_text(2, std::to_string(leftMF->get_position()));
+  moveBot(12, 80, false);
+  pros::lcd::set_text(3, std::to_string(leftMF->get_position()));
+
+  moveBot(4, 80, false);
+  pros::lcd::set_text(4, std::to_string(leftMF->get_position()));
 }
 
 void turn(float deg) //c
@@ -83,58 +91,11 @@ void block(const pros::Motor* motorToBlock, float desiredPosition) //desiredPosi
 //  pros::lcd::set_text(7, "Done blocking");
 }
 
-void pidTurn(float deg)
+//Positive is clockwise, Negative is counter-clockwise
+void pidTurn(float desiredDegrees)
 {
-  float arcLength = 2.0 * BOT_RADIUS * PI * (deg / 360.0f);
-  float desiredTicks = (arcLength/(4.0f*PI)) * (ENCODER_TICKS_PER_ROTATION); //ticks WAS NEGATIVE
+  float desiredTicks = (desiredDegrees * BOT_RADIUS) / (360 * WHEEL_RADIUS);
 
-  pros::lcd::set_text(3, "Rotation In Encoder Ticks - " + std::to_string(desiredTicks));
-
-	//float desiredTicks = rot; //ticks - WAS NEGATIVE
-	float currentTicks = 0; //ticks
-
-	float lastError = 0;
-	float error = 0;
-	float errorSum = 0;
-
-	float rateErrorChange;
-
-	std::int16_t motorSpinVelocity;
-
-  resetMotorRotations();
-
-  //short iter = 0;
-  int line = 4;
-
-	while (std::abs(error) > 0.01)
-	{
-		currentTicks = std::abs(rightMF->get_position());//getPosition(true);
-
-		//proportional
-		error = (desiredTicks - currentTicks); //encoder ticks
-
-		//integral
-		if (errorSum < integralMax)
-			errorSum += error;
-		else
-			errorSum = integralMax;
-
-		//derivative
-		rateErrorChange = (error - lastError);// / 16;//(getChangeInTime());
-
-		motorSpinVelocity = static_cast<std::int16_t>((error * (kP + 0.5 * (1 - (180 / std::abs(deg))))));// + (errorSum * kI) + (rateErrorChange * kD));
-
-    leftMF->move_velocity(motorSpinVelocity); //check sign
-    leftMB->move_velocity(motorSpinVelocity); //check sign
-    rightMF->move_velocity(-motorSpinVelocity);
-    rightMB->move_velocity(-motorSpinVelocity);
-
-		lastError = error;
-
-		pros::delay(2);
-	}
-
-  pros::lcd::set_text(line++, "Current Position - " + std::to_string(currentTicks));
 }
 
 void moveBot(double inches, int32_t velocity, bool direction)
