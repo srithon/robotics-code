@@ -18,11 +18,11 @@ pros::Controller* controller = new pros::Controller(pros::E_CONTROLLER_MASTER);
 
 void checkButtons(void* params)
 {
-	bool j = false;
+	//bool j = false;
 
   while (true)
   {
-    if (controller->get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A))
+    /*if (controller->get_digital_new_press(pros::E_CONTROLLER_DIGITAL_A))
     {
 			pros::lcd::clear();
 
@@ -32,7 +32,35 @@ void checkButtons(void* params)
 				pros::lcd::set_text(1, "TWO!");
 
 			j = !j;
-    }
+    }*/
+
+		if (controller->get_digital(pros::E_CONTROLLER_DIGITAL_L2) == 1)
+		{
+			//L2 in R2 out R1 shooter
+			roller->move_velocity(200);
+			roller2->move_velocity(-200);
+		}
+		else
+		{
+			roller->move_velocity(0);
+			roller2->move_velocity(0);
+		}
+		if (controller->get_digital(pros::E_CONTROLLER_DIGITAL_R2) == 1)
+		{
+			roller2->move_velocity(200);
+		}
+		else if (controller->get_digital(pros::E_CONTROLLER_DIGITAL_L2) == 0)
+		{
+			roller2->move_velocity(0);
+		}
+		if (controller->get_digital(pros::E_CONTROLLER_DIGITAL_R1) == 1)
+		{
+			shooter->move_velocity(200);
+		}
+		else
+		{
+			shooter->move_velocity(0);
+		}
 
 		pros::delay(2);
   }

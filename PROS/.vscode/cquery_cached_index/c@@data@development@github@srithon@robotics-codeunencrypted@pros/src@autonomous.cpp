@@ -1,4 +1,5 @@
 #include "components.h"
+#include <thread>
 
 /**
  * Runs the user autonomous code. This function will be started in its own task
@@ -39,12 +40,17 @@ void autonomous()
 //    pros::delay(5000);
 
   pros::lcd::set_text(1, std::to_string(leftMF->get_position()));
-  moveBot(12, 80, true);
+  rotateDriveMotors(1000, 100);
+  block(leftMF, 1000);
+
   pros::lcd::set_text(2, std::to_string(leftMF->get_position()));
-  moveBot(12, 80, false);
+  rotateDriveMotors(-1000, 100);
+  block(leftMF, -1000);
+
   pros::lcd::set_text(3, std::to_string(leftMF->get_position()));
-//
-  moveBot(4, 80, false);
+  rotateDriveMotors(-400, 100);
+  block(leftMF, -400);
+
   pros::lcd::set_text(4, std::to_string(leftMF->get_position()));
 }
 
