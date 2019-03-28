@@ -37,21 +37,21 @@ void checkButtons(void* params)
 		if (controller->get_digital(pros::E_CONTROLLER_DIGITAL_L2) == 1)
 		{
 			//L2 in R2 out R1 shooter
-			roller->move_velocity(200);
-			roller2->move_velocity(-200);
+			intakeRoller->move_velocity(200);
+			flipperRoller->move_velocity(-200);
 		}
 		else
 		{
-			roller->move_velocity(0);
-			roller2->move_velocity(0);
+			intakeRoller->move_velocity(0);
+			flipperRoller->move_velocity(0);
 		}
 		if (controller->get_digital(pros::E_CONTROLLER_DIGITAL_R2) == 1)
 		{
-			roller2->move_velocity(200);
+			flipperRoller->move_velocity(200);
 		}
 		else if (controller->get_digital(pros::E_CONTROLLER_DIGITAL_L2) == 0)
 		{
-			roller2->move_velocity(0);
+			flipperRoller->move_velocity(0);
 		}
 		if (controller->get_digital(pros::E_CONTROLLER_DIGITAL_R1) == 1)
 		{
