@@ -102,6 +102,23 @@ void pidTurn(float desiredDegrees)
 {
   float desiredTicks = (desiredDegrees * BOT_RADIUS) / (360 * WHEEL_RADIUS);
 
+  float cError = desiredTicks;
+  float lError = desiredTicks;
+  float errSum = 0;
+
+  while (std::abs(cError) < 0.01)
+  {
+    cError = (desiredTicks - leftMF->get_position());
+
+    if (std::abs(errSum) > INTEGRAL_MAX)
+      errSum += cError;	
+
+    float speed = (kP * cError) + (kI * errSum) + (kD * (cError - lError));
+
+    rotateDriveMotors(speed);
+
+    lError = cError;
+  }
 }
 
 void moveBot(double inches, int32_t velocity, bool direction)
