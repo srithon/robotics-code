@@ -115,7 +115,8 @@ void pidTurn(float desiredDegrees)
 
     float speed = (kP * cError) + (kI * errSum) + (kD * (cError - lError));
 
-    rotateDriveMotors(speed);
+    for (pros::Motor* motor : driveMotors)
+      motor->move_velocity(speed);
 
     lError = cError;
   }
