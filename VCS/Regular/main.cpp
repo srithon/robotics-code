@@ -1,6 +1,6 @@
 #include "robot-config.h"
 #include <math.h>
-
+#include <string>
 void auton(void);
 void driver(void);
 void pre_auton(void);
@@ -8,19 +8,21 @@ int getNumDirectionButtonsPressed(void);
 bool checkOnlyDirectionButtonPressed(void);
 void setUserControlBinds(void);
 void moveBot(double, bool);
-void moveBot(double, bool, double);
+void moveBot(double, double, bool);
 void turnBot(double, double);
 void resetRotations(void);
-
+void drawShooter();
+void releaseShooter();
+int selectAuton();
 enum COLOR
 {
-	RED, BLUE;
-}
+	RED, BLUE
+};
 
 enum SIDE
 {
-	FRONT, BACK;
-}
+	FRONT, BACK
+};
 
 /*********CONFIGURE************/
 
@@ -33,7 +35,7 @@ int main(void)
 {
 	pre_auton();
 	comp.autonomous(auton);
-	comp.usercontrol(driver);
+	comp.drivercontrol(driver);
 }
 
 void resetRotations(void)
@@ -48,7 +50,7 @@ void turnBot(double deg, double speed)
 {
     resetRotations();
     
-    if(deg > 0)
+   /* if(deg > 0)
 	{
         deg += 25;
     }
@@ -56,9 +58,9 @@ void turnBot(double deg, double speed)
 	{
         speed *= -1;
         deg -= 25;
-    }
+    }*/
 	
-    double rad = 6.5;
+    double rad = 7.63;
     double arcLength = (2.0*rad*M_PI)*(deg/360.0);
     double rot = 360.0*(arcLength/(4.0*M_PI));
     leftMotorB.startRotateTo(rot,vex::rotationUnits::deg,speed,vex::velocityUnits::pct);
@@ -86,11 +88,97 @@ void moveBot(double distance, bool direction)
     rightMotorB.rotateTo(deg, vex::rotationUnits::deg, n * 90, vex::velocityUnits::rpm);
 }
 
-inline void pre_auton(void)
+void moveBot(double distance, double speed, bool direction)
 {
-	Brain.Screen.print("750Z");
+    resetRotations();
+    
+    double radius = 2;
+    double n = -1.0;
+    if (direction)
+	{
+        n *= -1.0;
+    }
+    
+    double deg = n*360 * (distance / (2*radius*M_PI));
+    
+    leftMotorF.startRotateTo(deg, vex::rotationUnits::deg, speed, vex::velocityUnits::pct);
+    leftMotorB.startRotateTo(deg, vex::rotationUnits::deg, speed, vex::velocityUnits::pct);
+    rightMotorF.startRotateTo(deg, vex::rotationUnits::deg, speed, vex::velocityUnits::pct);   
+    rightMotorB.rotateTo(deg, vex::rotationUnits::deg, speed, vex::velocityUnits::pct);
 }
 
+inline void pre_auton(void)
+{
+    int pos = selectAuton();
+    Brain.Screen.clearScreen();
+    Brain.Screen.print("750Z");
+    Brain.Screen.newLine();
+    if(pos == 1){
+        col = COLOR::RED;
+        side = SIDE::FRONT;
+    }
+    else if(pos == 3){
+        col = COLOR::RED;
+        side = SIDE::BACK;
+    }
+    else if(pos == 4){
+        col = COLOR::BLUE;
+        side = SIDE::FRONT;
+    }
+    else if(pos == 6){
+        col = COLOR::BLUE;
+        side = SIDE::BACK;
+    }
+}
+int selectAuton() {
+    Brain.Screen.clearScreen();
+
+    Brain.Screen.drawRectangle(10, 80, 140, 50, color::red);
+    Brain.Screen.drawRectangle(160, 80, 140, 50, color::red);
+    Brain.Screen.drawRectangle(310, 80, 140, 50, color::red);
+
+    Brain.Screen.drawRectangle(10, 150, 140, 50, color::blue);
+    Brain.Screen.drawRectangle(160, 150, 140, 50, color::blue);
+    Brain.Screen.drawRectangle(310, 150, 140, 50, color::blue);
+
+    Brain.Screen.printAt(31, 105, "Front Flag");
+    Brain.Screen.printAt(183, 105, "Front Plat");
+    Brain.Screen.printAt(360, 105, "Back");
+
+    Brain.Screen.printAt(31, 175, "Front Flag");
+    Brain.Screen.printAt(185, 175, "Front Plat");
+    Brain.Screen.printAt(360, 175, "Back");
+
+    while(true) {
+        if(Brain.Screen.pressing()) {
+            int xPos = Brain.Screen.xPosition();
+            int yPos = Brain.Screen.yPosition();
+
+            if(yPos >= 80 && yPos <= 130) {
+                if(xPos >= 10 && xPos <= 150) {
+                    return 1;
+                }
+                else if(xPos >= 160 && xPos <= 300) {
+                    return 2;
+                }
+                else if(xPos >= 310 && xPos <= 450){
+                    return 3;
+                }
+            }
+            else if(yPos >= 150 && yPos <= 200) {
+                if(xPos >= 10 && xPos <= 150) {
+                    return 4;
+                }
+                else if(xPos >= 160 && xPos <= 300) {
+                    return 5;
+                }
+                else if(xPos >= 310 && xPos <= 450){
+                    return 6;
+                }
+            }
+        }
+    }
+}
 int getNumDirectionButtonsPressed(void)
 {
 	int n = 0;
@@ -124,6 +212,7 @@ inline bool checkOnlyDirectionButtonPressed(void)
 }
 
 // sets controller binds for user control
+
 void setUserControlBinds(void)
 {
 	/* RIGHT BUMPERS */
@@ -139,32 +228,28 @@ void setUserControlBinds(void)
 	/* LEFT BUMPERS	*/
 	INTAKE_IN->pressed([] ()
 	{
-		if (!INTAKE_OUT->pressing())
-		{ //if ButtonL2 is pressed, don't do anything
-			rollerMotor.spin(directionType::rev, 100, velocityUnits::pct);
-		}
+		rollerMotor.spin(directionType::fwd, 100, velocityUnits::pct);
+        
+        if (!INTAKE_OUT->pressing())
+            rollerMotor2.spin(directionType::rev, 100, velocityUnits::pct);
 	});
 	INTAKE_IN->released([] ()
 	{
+        rollerMotor.stop();
+        
 		if (!INTAKE_OUT->pressing())
-		{ //if ButtonL2 is pressed, don't do anything
-			rollerMotor.stop();
+		{
+            rollerMotor2.stop();
 		}
 	});
 	
 	INTAKE_OUT->pressed([] ()
 	{
-		if (!INTAKE_IN->pressing())
-		{ //if ButtonL1 is pressed, don't do anything
-			rollerMotor.spin(directionType::fwd, 100, velocityUnits::pct);
-		}
+		rollerMotor2.spin(directionType::fwd, 60, velocityUnits::pct);
 	});
 	INTAKE_OUT->released([] ()
 	{
-		if (!INTAKE_IN->pressing())
-		{ //if ButtonL1 is pressed, don't do anything
-			rollerMotor.stop();
-		}
+		rollerMotor2.stop();
 	});
 	
 	/*	DIRECTION BUTTONS	*/
@@ -219,22 +304,52 @@ void driver(void)
         task::sleep(20);
     }
 }
-
+void drawShooter(){
+    launcherMotor.rotateTo(1500,vex::rotationUnits::deg,100,velocityUnits::pct);
+}
+void releaseShooter(){
+  //  launcherMotor.spin(directionT)
+}
 void auton(void)
 {
-	int n = 1;
+	int n = -1;
 	
 	if (col == COLOR::BLUE)
 	{
 		n *= -1;
 	}
 	
-	if (side = SIDE::FRONT)
+	if (side == SIDE::FRONT)
 	{
 		//front code
+       // moveBot(24.0,5);
+       // turnBot(90.0,5);
+        moveBot(2.0, 20, true);
+        turnBot(n*90.0,12.5);
+        drawShooter();
+        /*
+        moveBot(40,50, true);
+        moveBot(8, 20, true);
+        moveBot(40, 50, false);
+        moveBot(8, 20, false);
+        turnBot(-n*90.0,25);
+        rollerMotor2.spin(directionType::rev, 70.0, velocityUnits::pct);
+        moveBot(42, 50, true);
+        moveBot(12, 30, false);
+        turnBot(-n*90.0, 25);
+        moveBot(14.0, 70, true);
+        rollerMotor2.stop(brakeType::brake);*/
+        
+       // drawShooter();
 	}
 	else
 	{
-		//back code
+        Brain.Screen.print("750ZZ");
+		rollerMotor2.spin(directionType::rev, 70.0, velocityUnits::pct);
+        moveBot(42, 60, true);
+        moveBot(6, 40, true);
+        moveBot(12,40, false);
+        turnBot(n*90, 40);
+        moveBot(18, 60, true);
 	}
 }
